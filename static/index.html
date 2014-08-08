@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en-IE">
+<head>
+  <meta charset="utf-8" />
+  <title>Tabula NG</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css" media="screen">
+  <script type="text/javascript" src="bower_components/paper/dist/paper-full.min.js"></script>
+  <script type="text/javascript" src="bower_components/underscore/underscore.js"></script>
+  <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="bower_components/backbone/backbone.js"></script>
+  <script type="text/javascript" src="bower_components/pdfListView/external/compatibility.js"></script>
+  <script type="text/javascript" src="bower_components/pdfListView/external/pdf.js"></script>
+  <script type="text/javascript">PDFJS.workerSrc = 'bower_components/pdfListView/external/pdf.worker.js';</script>
+  <!-- Core pdfListView file -->
+  <script src="bower_components/pdfListView/src/PdfListView.js"></script>
+
+  <script type="text/javascript" src="bower_components/tabula-table-editor/public/mixins.js"></script>
+  <script type="text/javascript" src="bower_components/tabula-table-editor/public/rectangularSelector.js"></script>
+  <script type="text/javascript" src="bower_components/tabula-table-editor/public/tableView.js"></script>
+  <script type="text/javascript" src="bower_components/tabula-table-editor/public/app.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="row" id="upload-controls">
+      <div class="col-md-6">
+        <h4 class="page-header">Upload file</h4>
+        <form action='/documents' method='post' enctype="multipart/form-data">
+          <input type='file' name='file' accept='application/pdf'>
+          <input type='submit' value='submit'>
+        </form>
+      </div>
+      <div class="col-md-6">
+        <h4 class="page-header">Uploaded PDFs</h4>
+        <ul id="uploaded-files"></ul>
+      </div>
+    </div>
+    <div class="row" id="pdf-view">
+
+    </div>
+  </div>
+  <script type="text/javascript">
+    $(function() {
+
+        var uploadedFilesTmpl = _.template(
+            "<% _.each(files, function(f) { %>" +
+            "<li><a href=\"/documents/<%= f.uuid %>\"><%= f.path %></a></li>" +
+            "<% }); %>"
+        );
+
+        var openDocument = function(url) {
+            var appview = new AppView({ pdfURL: url });
+            $('#pdf-view').html(appview.el);
+        };
+
+        // populate recently uploaded files list
+        var refreshRecentUploadsList = function() {
+            $.ajax({
+                type: 'GET',
+                url: '/documents',
+                success: function(data, status, xhr) {
+                    $('#uploaded-files').html(uploadedFilesTmpl({ files: data }));
+                },
+            });
+        };
+
+        refreshRecentUploadsList();
+
+        $(document).on({
+            click: function(event) {
+                event.preventDefault();
+                openDocument($(this).attr('href') + '/document');
+            }
+        }, '#uploaded-files li a');
+
+        // upload PDF
+        $('form').submit(function(e) {
+            e.preventDefault();
+            data = new FormData(this);
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(data, status, xhr) {
+                    refreshRecentUploadsList();
+                    openDocument('/documents/' + data.uuid + '/document');
+                },
+                error: function(xhr, status, error) {
+                }
+            });
+        });
+    });
+  </script>
+</body>
+</html>

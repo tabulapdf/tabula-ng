@@ -1,0 +1,22 @@
+{
+  "name": "Tabula",
+  "version": "1.0.0",
+  "authors": [
+    "Manuel Aristarán <jazzido@jazzido.com>"
+  ],
+  "description": "Extract tables from PDF files",
+  "license": "MIT",
+  "homepage": "http://tabula.nerdpower.org",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.2.0",
+    "tabula-table-editor": "git://github.com/tabulapdf/tabula-table-editor"
+  }
+}
