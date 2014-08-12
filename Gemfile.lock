@@ -25,8 +25,6 @@ GEM
     builder (3.2.2)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
-    cuba (3.1.1)
-      rack
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     equalizer (0.0.9)
@@ -53,6 +51,8 @@ GEM
     rack (1.5.2)
     rack-accept (0.4.5)
       rack (>= 0.4)
+    rack-contrib (1.1.0)
+      rack (>= 0.9.1)
     rack-mount (0.8.3)
       rack (>= 1.0.0)
     rake (10.3.2)
@@ -61,7 +61,6 @@ GEM
     tabula-extractor (0.7.4-java)
       trollop (~> 2.0)
     thread_safe (0.3.4-java)
-    tilt (2.0.1)
     trollop (2.0)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
@@ -80,9 +79,8 @@ PLATFORMS
   java
 
 DEPENDENCIES
-  cuba
   rack
+  rack-contrib
   rake
   tabula-api!
-  tilt
   warbler

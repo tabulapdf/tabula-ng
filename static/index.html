@@ -11,7 +11,7 @@
   <script type="text/javascript" src="bower_components/backbone/backbone.js"></script>
   <script type="text/javascript" src="bower_components/pdfListView/external/compatibility.js"></script>
   <script type="text/javascript" src="bower_components/pdfListView/external/pdf.js"></script>
-  <script type="text/javascript">PDFJS.workerSrc = 'bower_components/pdfListView/external/pdf.worker.js';</script>
+  <script type="text/javascript">/*PDFJS.workerSrc = 'bower_components/pdfListView/external/pdf.worker.js?' + Date.now(); */</script>
   <!-- Core pdfListView file -->
   <script src="bower_components/pdfListView/src/PdfListView.js"></script>
 
@@ -53,12 +53,6 @@
   <script type="text/javascript">
     $(function() {
 
-        var uploadedFilesTmpl = _.template(
-            "<% _.each(files, function(f) { %>" +
-            "<li><a href=\"/documents/<%= f.uuid %>\"><%= f.path %></a></li>" +
-            "<% }); %>"
-        );
-
         var pdfLoadProgressHandler = function(p) {
             $('.progress-bar')
                 .attr({
@@ -66,12 +60,19 @@
                     'aria-valuemax': p.total,
                 })
                 .css('width', ((p.loaded / p.total) * 100) + '%');
-
         };
 
+        var uploadedFilesTmpl = _.template(
+            "<% _.each(files, function(f) { %>" +
+            "<li><a href=\"/documents/<%= f.uuid %>\"><%= f.path %></a></li>" +
+            "<% }); %>"
+        );
+
+        var appview = new AppView({ onLoadProgress: pdfLoadProgressHandler });
+        $('#pdf-view').html(appview.el);
+
         var openDocument = function(url) {
-            var appview = new AppView({ pdfURL: url, onLoadProgress: pdfLoadProgressHandler });
-            $('#pdf-view').html(appview.el);
+            appview.loadPdf(url);
         };
 
         // populate recently uploaded files list
