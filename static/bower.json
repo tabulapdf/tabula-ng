@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "bootstrap": "~3.2.0",
-    "tabula-table-editor": "git://github.com/tabulapdf/tabula-table-editor"
+    "tabula-table-editor": "git://github.com/tabulapdf/tabula-table-editor",
+    "nprogress": "~0.1.6"
   }
 }
